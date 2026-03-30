@@ -16,26 +16,25 @@ jobs:
         id: check
         run: bash check.sh
 
-      # Uncomment for Telegram notifications:
-      # - name: Notify
-      #   if: steps.check.outputs.summary
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      #     CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     SUMMARY: ${{ steps.check.outputs.summary }}
-      #   run: |
-      #     curl -sf "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-      #       --data-urlencode "chat_id=$CHAT_ID" \
-      #       --data-urlencode "text=$SUMMARY"
+      - name: Notify
+        if: steps.check.outputs.summary
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SUMMARY: ${{ steps.check.outputs.summary }}
+        run: |
+          curl -sf "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT_ID" \
+            --data-urlencode "text=$SUMMARY"
 
-      # - name: Notify on failure
-      #   if: failure()
-      #   continue-on-error: true
-      #   env:
-      #     BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      #     CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      #     RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-      #   run: |
-      #     curl -sf "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
-      #       --data-urlencode "chat_id=$CHAT_ID" \
-      #       --data-urlencode "text=⚠️ Appointment checker failed — $RUN_URL"
+      - name: Notify on failure
+        if: failure()
+        continue-on-error: true
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl -sf "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
+            --data-urlencode "chat_id=$CHAT_ID" \
+            --data-urlencode "text=⚠️ Appointment checker failed — $RUN_URL"
