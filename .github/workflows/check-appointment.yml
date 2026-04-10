@@ -17,7 +17,7 @@ jobs:
         run: bash check.sh
 
       - name: Notify
-        if: steps.check.outputs.summary
+        if: false  # Telegram bot disabled
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -28,7 +28,7 @@ jobs:
             --data-urlencode "text=$SUMMARY"
 
       - name: Notify on failure
-        if: failure()
+        if: false  # Telegram bot disabled
         continue-on-error: true
         env:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
